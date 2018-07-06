@@ -10,6 +10,10 @@ public class Card {
 	private int bet;
 	private int bingo;
 	private int hit;
+	private int bornusMassX;
+	private int bornusMassY;
+	private int bornusRate;
+	private boolean bornusBingo;
 
 	public Card() {
 		Random random = new Random();
@@ -35,6 +39,11 @@ public class Card {
 		bet = 0;
 		bingo = 0;
 		hit = 1;
+
+		bornusMassX = random.nextInt(5);
+		bornusMassY = random.nextInt(5);
+		bornusRate = random.nextInt(10) + 1;
+		bornusBingo = false;
 	}
 
 	public double computeExpectedRate(int[] appearedCount) {
@@ -74,6 +83,7 @@ public class Card {
 			if (numbers[i][column] == ball) {
 				numbers[i][column] = 0;
 				this.hit++;
+				this.bornusBingo = true;
 				updateBingo(column, i);
 				break;
 			}
@@ -124,6 +134,11 @@ public class Card {
 
 	public int dividend() {
 		int dividend = (int)Math.floor(bet * DIVIDEND_RATE[bingo]);
+		if (bornusBingo) {
+			System.out.println("ボーナスビンゴです！");
+			dividend *= bornusRate;
+		}
+
 		this.bet = 0;
 		return dividend;
 	}

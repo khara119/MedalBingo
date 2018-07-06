@@ -1,6 +1,6 @@
 import java.util.Random;
 
-public class Utils {
+public class UtilsSample {
 	public static String generateName() {
 		String[] names = {
 			"NAMES",
