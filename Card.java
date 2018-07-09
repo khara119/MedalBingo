@@ -6,6 +6,22 @@ public class Card {
 		0, 1.5, 2, 3, 5, 8, 10, 15, 20, 30, 50, 100, 1000
 	};
 
+	private static final int[] BORNUS_RATE = {
+		1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+		2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+		3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+		4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+		5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+		6, 6, 6, 6, 6, 6, 6, 6, 6,
+		7, 7, 7, 7, 7, 7, 7, 7,
+		8, 8, 8, 8, 8, 8, 8,
+		9, 9, 9, 9, 9, 9,
+		10, 10, 10, 10, 10,
+		20, 20, 20,
+		50, 50,
+		100
+	};
+
 	private int[][] numbers;
 	private int bet;
 	private int bingo;
@@ -14,6 +30,7 @@ public class Card {
 	private int bornusMassY;
 	private int bornusRate;
 	private boolean bornusBingo;
+	private int bornusNumber;
 
 	public Card() {
 		Random random = new Random();
@@ -42,8 +59,9 @@ public class Card {
 
 		bornusMassX = random.nextInt(5);
 		bornusMassY = random.nextInt(5);
-		bornusRate = random.nextInt(10) + 1;
+		bornusRate = BORNUS_RATE[random.nextInt(BORNUS_RATE.length)];
 		bornusBingo = false;
+		bornusNumber= numbers[bornusMassY][bornusMassX];
 	}
 
 	public double computeExpectedRate(int[] appearedCount) {
@@ -83,7 +101,9 @@ public class Card {
 			if (numbers[i][column] == ball) {
 				numbers[i][column] = 0;
 				this.hit++;
-				this.bornusBingo = true;
+				if (i == this.bornusMassY && column == this.bornusMassX) {
+					this.bornusBingo = true;
+				}
 				updateBingo(column, i);
 				break;
 			}
@@ -135,7 +155,6 @@ public class Card {
 	public int dividend() {
 		int dividend = (int)Math.floor(bet * DIVIDEND_RATE[bingo]);
 		if (bornusBingo) {
-			System.out.println("ボーナスビンゴです！");
 			dividend *= bornusRate;
 		}
 
@@ -157,6 +176,13 @@ public class Card {
 		str += "ヒット数： " + String.format("%5d", this.hit) + "  \n";
 		str += "ビンゴ数： " + String.format("%5d", this.bingo) + "  \n";
 		str += "ベッド： " + String.format("%7d", bet) + "  \n";
+		str += "ボーナス値： ";
+		if (this.bornusBingo) {
+			str += "*" + String.format("%2d", this.bornusNumber) + "  \n";
+		} else {
+			str += String.format("%3d", this.bornusNumber) + "  \n";
+		}
+		str += "ボーナス率： " + String.format("%3d", this.bornusRate) + "  \n";
 
 		return str;
 	}

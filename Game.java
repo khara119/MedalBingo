@@ -34,7 +34,7 @@ public class Game {
 			}
 	
 			Random random = new Random();
-			for (int i=1; i<=40; i++) {
+			for (int i=1; i<=35; i++) {
 				Integer ball = balls.get(random.nextInt(balls.size()));
 	
 				System.out.println(i + "回目の抽選です");

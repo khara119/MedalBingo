@@ -59,7 +59,7 @@ public class Player {
 	public String toString() {
 		String str = this.name + "（" + this.medal + "[" +
 			(this.medal - this.initialMedal) + "]）\n";
-		String[][] cards_str = new String[cards.length][10];
+		String[][] cards_str = new String[cards.length][12];
 		for (int i=0; i<cards.length; i++) {
 			String[] split_str = cards[i].toString().split("\n");
 			for (int j=0; j<split_str.length; j++) {
