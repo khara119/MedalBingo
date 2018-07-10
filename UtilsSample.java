@@ -10,4 +10,14 @@ public class UtilsSample {
 
 		return names[new Random().nextInt(names.length)];
 	}
+
+	public static String[] getNames() {
+		String[] names = {
+			"NAMES",
+			"ARE",
+			"HERE"
+		};
+
+		return names;
+	}
 }
