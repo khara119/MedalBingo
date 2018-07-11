@@ -186,6 +186,10 @@ public class Card {
 		return dividend;
 	}
 
+	public boolean getBornusBingo() {
+		return this.bornusBingo;
+	}
+
 	public String toString() {
 		String line = "------------------";
 		String str = line + "\n";

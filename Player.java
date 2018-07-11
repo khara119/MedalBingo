@@ -40,13 +40,13 @@ public class Player {
 				this.expectedBornusRate = 1;
 				break;
 			case 2:
-				this.minCardSelectNum = 0;
+				this.minCardSelectNum = 1;
 				this.maxCardSelectNum = 4;
 				this.expectedBetRate = random.nextDouble() * 0.5;
 				this.expectedBornusRate = 1;
 				break;
 			case 3:
-				this.minCardSelectNum = 0;
+				this.minCardSelectNum = 1;
 				this.maxCardSelectNum = 4;
 				this.expectedBetRate = 0;
 				this.expectedBornusRate = random.nextInt(10) + 1;
@@ -110,8 +110,8 @@ public class Player {
 
 		ArrayList<Card> selectCard = new ArrayList<>();
 		for (int i=0; i<cardSelectNum; i++) {
-			if ((this.cardSelectType == 2 && this.expectedBetRate < this.cards[i].computeExpectedRate(appearedCount)) ||
-				(this.cardSelectType == 3 && this.expectedBornusRate < this.cards[i].getBornusRate())) {
+			if ((this.cardSelectType == 2 && i+1 > this.minCardSelectNum && this.expectedBetRate < this.cards[i].computeExpectedRate(appearedCount)) ||
+				(this.cardSelectType == 3 && i+1 > this.minCardSelectNum && (!this.cards[i].getBornusBingo() || this.expectedBornusRate < this.cards[i].getBornusRate()))) {
 				break;
 			}
 
@@ -125,11 +125,19 @@ public class Player {
 				break;
 			}
 
-			int minBet = (int)Math.ceil(medal * this.minBetRate / 4);
-			int maxBet = (int)Math.ceil(medal * this.maxBetRate / 4);
+			int minBet = (int)Math.ceil(medal * this.minBetRate / this.cards.length);
+			int maxBet = (int)Math.ceil(medal * this.maxBetRate / this.cards.length);
 
-			int bet = random.nextInt(maxBet - minBet) + minBet;
-			if (bet < 0) {
+			int bet = 0;
+			if (maxBet > minBet) {
+				bet = random.nextInt(maxBet - minBet) + minBet;
+			}
+
+			if (bet >= 10000000) {
+				bet = 9999999;
+			}
+
+			if (bet <= 0) {
 				bet = 1;
 			} else if (bet > this.medal) {
 				bet = this.medal;

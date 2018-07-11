@@ -19,6 +19,7 @@ public class Game {
 			monitorPlayers.add(noMonitorPlayers.get(idx));
 			noMonitorPlayers.remove(idx);
 		}
+		Thread.sleep(SLEEP_TIME);
 
 		while (!monitorPlayers.isEmpty()) {
 			System.out.println("次のゲームを開始します。");
@@ -58,6 +59,7 @@ public class Game {
 	
 				System.out.println(i + "回目の抽選です");
 				System.out.println("次の番号は " + ball + " 番です。");
+				System.out.println();
 	
 				Thread.sleep(SLEEP_TIME);
 	
@@ -97,6 +99,10 @@ public class Game {
 				System.out.println();
 				Thread.sleep(SLEEP_TIME);
 			}
+
+			int survive = monitorPlayers.size() + noMonitorPlayers.size();
+			System.out.println("現在" + survive + "人が残っています。");
+			Thread.sleep(SLEEP_TIME);
 		}
 	}
 }
