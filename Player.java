@@ -16,6 +16,7 @@ public class Player {
 	private Card[] cards;
 	private int[] appearedCount;
 	private int initialMedal;
+	private int lastMedal;
 
 	public Player() {
 		this(Utils.generateName());
@@ -35,19 +36,19 @@ public class Player {
 				break;
 			case 1:
 				this.minCardSelectNum = 2;
-				this.maxCardSelectNum = 4;
+				this.maxCardSelectNum = 5;
 				this.expectedBetRate = 0;
 				this.expectedBornusRate = 1;
 				break;
 			case 2:
 				this.minCardSelectNum = 1;
-				this.maxCardSelectNum = 4;
+				this.maxCardSelectNum = 5;
 				this.expectedBetRate = random.nextDouble() * 0.5;
 				this.expectedBornusRate = 1;
 				break;
 			case 3:
 				this.minCardSelectNum = 1;
-				this.maxCardSelectNum = 4;
+				this.maxCardSelectNum = 5;
 				this.expectedBetRate = 0;
 				this.expectedBornusRate = random.nextInt(10) + 1;
 				break;
@@ -70,7 +71,7 @@ public class Player {
 				break;
 		}
 
-		this.medal = new Random().nextInt(9900) + 100;
+		this.lastMedal = this.medal = new Random().nextInt(9900) + 100;
 		this.initialMedal = this.medal;
 		this.appearedCount = new int[76];
 		for (int i=0; i<76; i++) {
@@ -96,6 +97,7 @@ public class Player {
 	}
 
 	public void bet() {
+		this.lastMedal = this.medal;
 		if (cardSelectType == 3) {
 			Arrays.sort(this.cards, (a, b) -> b.getBornusRate() - a.getBornusRate());
 		} else {
@@ -118,11 +120,10 @@ public class Player {
 			selectCard.add(this.cards[i]);
 		}
 
-		this.cards = selectCard.toArray(new Card[selectCard.size()]);
-
-		for (Card card : this.cards) {
+		for (Card card : selectCard) {
 			if (this.medal <= 0) {
-				break;
+				selectCard.remove(card);
+				continue;
 			}
 
 			int minBet = (int)Math.ceil(medal * this.minBetRate / this.cards.length);
@@ -146,6 +147,8 @@ public class Player {
 			card.bet(bet);
 			this.medal -= bet;
 		}
+
+		this.cards = selectCard.toArray(new Card[selectCard.size()]);
 	}
 
 	public void dividend() {
@@ -163,8 +166,10 @@ public class Player {
 	}
 
 	public String toString() {
-		String str = this.name + "（" + this.medal + "[" +
-			(this.medal - this.initialMedal) + "]） ";
+		String str = this.name + "（" + this.medal +
+			"[前回比 " + (this.medal - this.lastMedal) +
+			"、トータル比 " + (this.medal - this.initialMedal) + "]） ";
+
 		if (this.cardSelectType == 0) {
 			str += "単発型";
 		} else if (this.cardSelectType == 1) {
@@ -203,5 +208,11 @@ public class Player {
 		}
 
 		return str;
+	}
+
+	public String summary() {
+		return this.name + ": " + this.medal + "（前回比 " +
+			(this.medal - this.lastMedal) + "、トータル比 " +
+			(this.medal - this.initialMedal) + "）";
 	}
 }
